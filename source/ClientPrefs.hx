@@ -13,7 +13,7 @@ class ClientPrefs {
 	public static var globalAntialiasing:Bool = true;
 	public static var noteSplashes:Bool = true;
 	public static var noteSplashesOpponent:Bool = false;
-	public static var lowQuality:Bool = false;
+	public static var stageQuality:String = 'Normal';
 	public static var framerate:Int = 60;
 	public static var cursing:Bool = true;
 	public static var violence:Bool = true;
@@ -33,6 +33,11 @@ class ClientPrefs {
 	public static var voicesVolume:Float = 1;
 	public static var underlayAlpha:Float = 0;
 	public static var instantRestart:Bool = false;
+	#if !html5
+	public static var autoPause:Bool = true;
+	#else
+	public static var autoPause:Bool = false;
+	#end
 	public static var gameplaySettings:Map<String, Dynamic> = [
 		'scrollspeed' => 1.0,
 		'scrolltype' => 'multiplicative', 
@@ -160,7 +165,7 @@ class ClientPrefs {
 		FlxG.save.data.globalAntialiasing = globalAntialiasing;
 		FlxG.save.data.noteSplashes = noteSplashes;
 		FlxG.save.data.noteSplashesOpponent = noteSplashesOpponent;
-		FlxG.save.data.lowQuality = lowQuality;
+		FlxG.save.data.stageQuality = stageQuality;
 		FlxG.save.data.framerate = framerate;
 		//FlxG.save.data.cursing = cursing;
 		//FlxG.save.data.violence = violence;
@@ -175,6 +180,12 @@ class ClientPrefs {
 		FlxG.save.data.noReset = noReset;
 		FlxG.save.data.healthBarAlpha = healthBarAlpha;
 		FlxG.save.data.comboOffset = comboOffset;
+		FlxG.save.data.freeplayAlphabetic = freeplayAlphabetic;
+		FlxG.save.data.instVolume = instVolume;
+		FlxG.save.data.voicesVolume = voicesVolume;
+		FlxG.save.data.underlayAlpha = underlayAlpha;
+		FlxG.save.data.instantRestart = instantRestart;
+		FlxG.save.data.autoPause = autoPause;
 		FlxG.save.data.achievementsMap = Achievements.achievementsMap;
 		FlxG.save.data.henchmenDeath = Achievements.henchmenDeath;
 
@@ -185,12 +196,6 @@ class ClientPrefs {
 		FlxG.save.data.safeFrames = safeFrames;
 		FlxG.save.data.gameplaySettings = gameplaySettings;
 		FlxG.save.data.controllerMode = controllerMode;
-
-		FlxG.save.data.freeplayAlphabetic = freeplayAlphabetic;
-		FlxG.save.data.instVolume = instVolume;
-		FlxG.save.data.voicesVolume = voicesVolume;
-		FlxG.save.data.underlayAlpha = underlayAlpha;
-		FlxG.save.data.instantRestart = instantRestart;
 	
 		FlxG.save.flush();
 
@@ -226,8 +231,10 @@ class ClientPrefs {
 		if(FlxG.save.data.noteSplashesOpponent != null) {
 			noteSplashesOpponent = FlxG.save.data.noteSplashesOpponent;
 		}
-		if(FlxG.save.data.lowQuality != null) {
-			lowQuality = FlxG.save.data.lowQuality;
+		if(FlxG.save.data.stageQuality != null) {
+			stageQuality = FlxG.save.data.stageQuality;
+		} else if(FlxG.save.data.lowQuality != null) {
+			stageQuality = (FlxG.save.data.lowQuality ? 'Low' : 'Normal');
 		}
 		if(FlxG.save.data.framerate != null) {
 			framerate = FlxG.save.data.framerate;
@@ -317,6 +324,10 @@ class ClientPrefs {
 		}
 		if(FlxG.save.data.instantRestart != null) {
 			instantRestart = FlxG.save.data.instantRestart;
+		}
+		if(FlxG.save.data.autoPause != null) {
+			autoPause = FlxG.save.data.autoPause;
+			FlxG.autoPause = autoPause;
 		}
 		
 		// flixel automatically saves your volume!
